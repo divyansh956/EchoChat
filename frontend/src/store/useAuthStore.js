@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import toast from "react-hot-toast";
-import { axiosInstance } from "../lib/axiox";
+import { axiosInstance } from "../lib/axios";
 import { Navigate } from "react-router-dom";
 
 export const useAuthStore = create((set) => ({

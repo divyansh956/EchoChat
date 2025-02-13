@@ -4,34 +4,38 @@
     "info": {
         "singularName": "message",
         "pluralName": "messages",
-        "displayName": "Message"
+        "displayName": "Message",
+        "description": ""
     },
     "options": {
         "draftAndPublish": true
     },
     "attributes": {
-        "senderId": {
+        "sender": {
             "type": "relation",
-            "relation": "oneToOne",
-            "target": "plugin::users-permissions.user"
+            "relation": "manyToOne",
+            "target": "plugin::users-permissions.user",
+            "inversedBy": "messages_sent"
         },
-        "receiverId": {
+        "receiver": {
             "type": "relation",
-            "relation": "oneToOne",
-            "target": "plugin::users-permissions.user"
+            "relation": "manyToOne",
+            "target": "plugin::users-permissions.user",
+            "inversedBy": "messages_received"
         },
         "text": {
             "type": "text"
         },
         "image": {
+            "type": "media",
+            "multiple": true,
+            "required": false,
             "allowedTypes": [
                 "images",
                 "files",
                 "videos",
                 "audios"
-            ],
-            "type": "media",
-            "multiple": true
+            ]
         }
     }
 }

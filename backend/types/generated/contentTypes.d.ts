@@ -372,6 +372,7 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
 export interface ApiMessageMessage extends Struct.CollectionTypeSchema {
   collectionName: 'messages';
   info: {
+    description: '';
     displayName: 'Message';
     pluralName: 'messages';
     singularName: 'message';
@@ -394,12 +395,12 @@ export interface ApiMessageMessage extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
-    receiverId: Schema.Attribute.Relation<
-      'oneToOne',
+    receiver: Schema.Attribute.Relation<
+      'manyToOne',
       'plugin::users-permissions.user'
     >;
-    senderId: Schema.Attribute.Relation<
-      'oneToOne',
+    sender: Schema.Attribute.Relation<
+      'manyToOne',
       'plugin::users-permissions.user'
     >;
     text: Schema.Attribute.Text;
@@ -884,6 +885,14 @@ export interface PluginUsersPermissionsUser
       'plugin::users-permissions.user'
     > &
       Schema.Attribute.Private;
+    messages_received: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::message.message'
+    >;
+    messages_sent: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::message.message'
+    >;
     password: Schema.Attribute.Password &
       Schema.Attribute.Private &
       Schema.Attribute.SetMinMaxLength<{

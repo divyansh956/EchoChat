@@ -17,6 +17,8 @@ const App = () => {
 
   useEffect(() => {
     checkAuth();
+    // http://localhost:1337/api/messages?populate[sender][fields]=id&populate[receiver][fields]=id
+    // http://localhost:1337/api/messages?populate[sender][fields]=id,documentId&populate[receiver][fields]=id,documentId&filters[$or][0][sender][id]=2&filters[$or][1][receiver][id]=2 - get messages for user with id 2
   }, [checkAuth]);
 
   if (isCheckingAuth && !authUser)
