@@ -26,7 +26,7 @@ export const useChatStore = create((set, get) => ({
     try {
       const receiverId = get().selectedUser.id;
       const res = await axiosInstance.get(
-        `/messages?populate[sender][fields]=id&populate[receiver][fields]=id` +
+        `/messages?populate[sender][fields]=id&populate[receiver][fields]=id&populate[image][fields]=id,url` +
           `&filters[$or][0][$and][0][sender][id]=${senderId}&filters[$or][0][$and][1][receiver][id]=${receiverId}` +
           `&filters[$or][1][$and][0][sender][id]=${receiverId}&filters[$or][1][$and][1][receiver][id]=${senderId}`
       );
@@ -41,7 +41,7 @@ export const useChatStore = create((set, get) => ({
     set({ isMessagesLoading: true });
     try {
       const res = await axiosInstance.post(
-        `/messages?populate[sender][fields]=id&populate[receiver][fields]=id`,
+        `/messages?populate[sender][fields]=id&populate[receiver][fields]=id&populate[image][fields]=id,url`,
         messageData
       );
       set({ messages: [...get().messages, res.data.data] });

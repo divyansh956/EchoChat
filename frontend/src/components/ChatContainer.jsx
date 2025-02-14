@@ -7,6 +7,8 @@ import MessageSkeleton from "./skeletons/MessageSkeleton";
 import { useAuthStore } from "../store/useAuthStore";
 import { formatMessageTime } from "../lib/utils";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const ChatContainer = () => {
   const { messages, getMessages, isMessagesLoading, selectedUser } =
     useChatStore();
@@ -66,7 +68,7 @@ const ChatContainer = () => {
             <div className="chat-bubble flex flex-col">
               {message.image && (
                 <img
-                  src={message.image}
+                  src={API_URL + message.image.url}
                   alt="Attachment"
                   className="sm:max-w-[200px] rounded-md mb-2"
                 />
