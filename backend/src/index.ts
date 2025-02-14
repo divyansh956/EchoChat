@@ -18,7 +18,7 @@ export default {
 
     const io = new Server(strapi.server.httpServer, {
       cors: {
-        origin: "*",
+        origin: process.env.CORS_ORIGIN,
         methods: ["GET", "POST"],
       },
     });
@@ -42,8 +42,11 @@ export default {
       });
 
       socket.on("newMessage", (data) => {
-        const { receiver, text } = data;
-        console.log("New message:", data);
+        const { receiver } = data;
+        const receiverSocketId = userSocketMap[receiver.id];
+        if (receiverSocketId) {
+          io.to(receiverSocketId).emit("newMessage", data);
+        }
       });
     });
 

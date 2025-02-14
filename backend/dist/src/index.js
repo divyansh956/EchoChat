@@ -16,7 +16,7 @@ exports.default = {
         }
         const io = new socket_io_1.Server(strapi.server.httpServer, {
             cors: {
-                origin: "*",
+                origin: process.env.CORS_ORIGIN,
                 methods: ["GET", "POST"],
             },
         });
@@ -35,8 +35,11 @@ exports.default = {
                 io.emit("getOnlineUsers", Object.keys(userSocketMap));
             });
             socket.on("newMessage", (data) => {
-                const { receiver, text } = data;
-                console.log("New message:", data);
+                const { receiver } = data;
+                const receiverSocketId = userSocketMap[receiver.id];
+                if (receiverSocketId) {
+                    io.to(receiverSocketId).emit("newMessage", data);
+                }
             });
         });
         strapi.io = io;

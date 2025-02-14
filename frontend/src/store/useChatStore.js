@@ -13,7 +13,11 @@ export const useChatStore = create((set, get) => ({
   getUsers: async (userId) => {
     set({ isUsersLoading: true });
     try {
-      const res = await axiosInstance.get(`/users?filters[id][$ne]=${userId}`);
+      const res = await axiosInstance.get(`/users?filters[id][$ne]=${userId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       set({ users: res.data });
     } catch (error) {
       toast.error(error.response.data.message);
@@ -29,7 +33,12 @@ export const useChatStore = create((set, get) => ({
       const res = await axiosInstance.get(
         `/messages?populate[sender][fields]=id&populate[receiver][fields]=id&populate[image][fields]=id,url` +
           `&filters[$or][0][$and][0][sender][id]=${senderId}&filters[$or][0][$and][1][receiver][id]=${receiverId}` +
-          `&filters[$or][1][$and][0][sender][id]=${receiverId}&filters[$or][1][$and][1][receiver][id]=${senderId}`
+          `&filters[$or][1][$and][0][sender][id]=${receiverId}&filters[$or][1][$and][1][receiver][id]=${senderId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
       );
       set({ messages: res.data.data });
     } catch (error) {
@@ -41,10 +50,14 @@ export const useChatStore = create((set, get) => ({
   sendMessage: async (messageData) => {
     set({ isMessagesLoading: true });
     try {
-      console.log("messageData", messageData);
       const res = await axiosInstance.post(
         `/messages?populate[sender][fields]=id&populate[receiver][fields]=id&populate[image][fields]=id,url`,
-        messageData
+        messageData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
       );
       set({ messages: [...get().messages, res.data.data] });
 
@@ -68,7 +81,6 @@ export const useChatStore = create((set, get) => ({
     const socket = useAuthStore.getState().socket;
 
     socket.on("newMessage", (newMessage) => {
-      console.log("newMessage", newMessage);
       const isMessageSentFromSelectedUser =
         newMessage.sender.id === selectedUser.id;
       if (!isMessageSentFromSelectedUser) return;
