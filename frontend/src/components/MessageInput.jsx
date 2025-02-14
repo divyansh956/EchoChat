@@ -43,6 +43,7 @@ const MessageInput = () => {
       // Upload image to Strapi
       const res = await axiosInstance.post("/upload", formData, {
         headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
           "Content-Type": "multipart/form-data",
         },
       });
