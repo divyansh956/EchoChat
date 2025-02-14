@@ -1,20 +1,52 @@
-// import type { Core } from '@strapi/strapi';
+import { Core } from "@strapi/strapi";
+import { Server, Socket } from "socket.io";
 
 export default {
   /**
-   * An asynchronous register function that runs before
-   * your application is initialized.
-   *
-   * This gives you an opportunity to extend code.
+   * Register function that runs before your application is initialized.
    */
-  register(/* { strapi }: { strapi: Core.Strapi } */) {},
+  register() { },
 
   /**
-   * An asynchronous bootstrap function that runs before
-   * your application gets started.
-   *
-   * This gives you an opportunity to set up your data model,
-   * run jobs, or perform some special logic.
+   * Bootstrap function that runs before your application gets started.
    */
-  bootstrap(/* { strapi }: { strapi: Core.Strapi } */) {},
+  bootstrap({ strapi }: { strapi: Core.Strapi }) {
+    if (!strapi.server.httpServer) {
+      console.error("HTTP Server not initialized.");
+      return;
+    }
+
+    const io = new Server(strapi.server.httpServer, {
+      cors: {
+        origin: "*",
+        methods: ["GET", "POST"],
+      },
+    });
+
+    // Store online users
+    const userSocketMap: Record<string, string> = {}; // { userId: socketId }
+
+    io.on("connection", (socket: Socket) => {
+      console.log("User connected:", socket.id);
+
+      const userId = socket.handshake.query.userId as string;
+      if (userId) userSocketMap[userId] = socket.id;
+
+      // Send updated online users list
+      io.emit("getOnlineUsers", Object.keys(userSocketMap));
+
+      socket.on("disconnect", () => {
+        console.log("User disconnected:", socket.id);
+        delete userSocketMap[userId];
+        io.emit("getOnlineUsers", Object.keys(userSocketMap));
+      });
+
+      socket.on("newMessage", (data) => {
+        const { receiver, text } = data;
+        console.log("New message:", data);
+      });
+    });
+
+    (strapi as any).io = io;
+  },
 };
