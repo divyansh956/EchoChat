@@ -1,4 +1,4 @@
-# Real-Time Chat Application
+# EchoChat
 This is a real-time chat application built using **React (JavaScript) for the frontend** and **Strapi (TypeScript) for the backend**. The application allows users to sign up, log in, and chat with the server in real time using **Socket.io**. All chat sessions and authentication data are securely handled with protected routes.
 
 ## Features
