@@ -3,7 +3,7 @@ import { useChatStore } from "../store/useChatStore";
 import { Image, Send, X } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuthStore } from "../store/useAuthStore";
-import axios from "axios";
+import { axiosInstance } from "../lib/axios";
 
 const MessageInput = () => {
   const [text, setText] = useState("");
@@ -41,13 +41,11 @@ const MessageInput = () => {
       formData.append("files", fileInputRef.current.files[0]);
 
       // Upload image to Strapi
-      const res = await axios.post(
-        "http://localhost:1337/api/upload",
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      const res = await axiosInstance.post("/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       if (res.data && res.data.length > 0) {
         imageId = res.data[0].id;

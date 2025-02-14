@@ -21,10 +21,11 @@ const App = () => {
     // http://localhost:1337/api/messages?populate[sender][fields]=id,documentId&populate[receiver][fields]=id,documentId&filters[$or][0][sender][id]=2&filters[$or][1][receiver][id]=2 - get messages for user with id 2
   }, [checkAuth]);
 
-  if (isCheckingAuth && !authUser)
+  if (isCheckingAuth && authUser)
     return (
       <div className="flex items-center justify-center h-screen">
         <Loader className="size-10 animate-spin" />
+        {console.log("isCheckingAuth", authUser)}
       </div>
     );
 

@@ -12,6 +12,7 @@ const Sidebar = () => {
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
 
   useEffect(() => {
+    console.log("authUser.id from Sidebar", authUser.id);
     getUsers(authUser.id);
   }, [authUser.id, getUsers]);
 
